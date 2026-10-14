@@ -1,6 +1,6 @@
 # AHB-to-APB Bridge
 
-A Verilog HDL implementation of an AMBA AHB-to-APB bridge, developed as part of the Maven Silicon VLSI Design Internship (Batch DI 66). The design translates AHB-side transfers into APB-side peripheral transactions using address decoding, pipelined registers, and an FSM-based controller.
+A Verilog HDL implementation of an AMBA AHB-to-APB bridge. The design translates AHB-side transfers into APB-side peripheral transactions using address decoding, pipelined registers, and an FSM-based controller.
 
 ## Architecture
 
