@@ -1,46 +1,101 @@
 # AHB-to-APB Bridge
 
-A modular Verilog HDL project exploring an AMBA AHB-to-APB bridge, including AHB-side transfer qualification, address-based APB peripheral selection, and FSM-driven APB control.
+A Verilog HDL implementation of an AMBA AHB-to-APB bridge, developed as part of the Maven Silicon VLSI Design Internship (Batch DI 66). The design translates AHB-side transfers into APB-side peripheral transactions using address decoding, pipelined registers, and an FSM-based controller.
 
 ## Architecture
 
-The RTL is split into five modules:
+The design is organized into four main blocks:
 
-- `AHB_master.v` — simulation master that generates single and burst-style read/write stimulus.
-- `AHB_slave_interface.v` — qualifies AHB transfers, registers address/data signals, selects one of three APB regions, and returns read data.
-- `APB_controller.v` — FSM that sequences the bridge's APB control signals.
-- `APB_interface.v` — simple APB-side interface model. Its read data is randomized for simulation and is not a real peripheral memory.
-- `bridge_top.v` — integrates the AHB-side interface and APB controller.
+- **AHB Master** — generates AHB read and write transactions for simulation, including WRAP4 burst traffic.
+- **AHB Slave Interface** — qualifies incoming AHB transfers, pipelines address and write data, decodes the target peripheral, and forwards read data and response signals.
+- **APB Controller** — sequences APB setup and enable phases using an eight-state finite-state machine.
+- **APB Interface** — models the APB-side signals for simulation.
 
-## Address decoding
+The top-level integration is implemented in `rtl/bridge_top.v`.
 
-The AHB-side interface qualifies transfers in the address range `0x8000_0000` to `0x8BFF_FFFF` and generates three one-hot peripheral select values:
+## System Block Diagram
 
-| Address range | Select |
+![AHB-to-APB bridge system architecture](docs/images/bridge-architecture.svg)
+
+![Top-level bridge block diagram](docs/images/bridge-block-diagram.svg)
+
+## AHB Slave Interface
+
+The AHB-side interface uses the following signals:
+
+| Signal | Description |
 |---|---|
-| `0x8000_0000`–`0x83FF_FFFF` | `pselx = 3'b001` |
-| `0x8400_0000`–`0x87FF_FFFF` | `pselx = 3'b010` |
-| `0x8800_0000`–`0x8BFF_FFFF` | `pselx = 3'b100` |
+| `HCLK` | Clock for bus transfers |
+| `HRESETn` | Active-low reset |
+| `HTRANS[1:0]` | Transfer type: IDLE, BUSY, NONSEQUENTIAL, or SEQUENTIAL |
+| `HWRITE` | Read/write direction |
+| `HADDR[31:0]` | AHB address |
+| `HWDATA[31:0]` | AHB write data |
+| `HRDATA[31:0]` | Read data returned to the AHB master |
+| `HREADYIN` / `HREADYOUT` | Transfer readiness and wait-state control |
+| `HRESP[1:0]` | AHB response |
 
-## Repository layout
+Address and write-data signals are pipelined through `haddr1`, `haddr2`, `hwdata1`, and `hwdata2`. A transfer is marked valid when `HREADYIN` is high, `HTRANS` indicates NONSEQUENTIAL or SEQUENTIAL, and the address is within the bridge's mapped region.
 
-- `rtl/` — synthesizable/design Verilog modules.
-- `tb/` — simulation testbenches.
-- `synthesis/` — Quartus Prime project settings and selected reports.
-- `report/` — project report.
+### Address decoding
 
-Generated simulator work libraries and Quartus databases are intentionally excluded.
+The bridge decodes addresses in the range `0x8000_0000` to `0x8BFF_FFFF` and produces a one-hot `tempselx[2:0]` selection:
+
+| Address range | `tempselx` |
+|---|---|
+| `0x8000_0000`–`0x83FF_FFFF` | `3'b001` |
+| `0x8400_0000`–`0x87FF_FFFF` | `3'b010` |
+| `0x8800_0000`–`0x8BFF_FFFF` | `3'b100` |
+
+## APB Controller
+
+The APB controller coordinates the AHB pipeline with the APB setup and enable phases. Its eight states are:
+
+| State | Purpose |
+|---|---|
+| `ST_IDLE` | Waits for a valid transfer and keeps the peripheral selection and enable inactive when idle |
+| `ST_WWAIT` | Allows pipelined AHB write data to become available |
+| `ST_WRITE` | Drives the APB write phase |
+| `ST_WRITEP` | Handles the pending-write path and its wait-state sequencing |
+| `ST_WENABLE` | Completes an APB write enable phase |
+| `ST_WENABLEP` | Coordinates a pending transfer, including the write-to-read transition |
+| `ST_READ` | Sets up the APB read transfer |
+| `ST_RENABLE` | Completes the APB read enable phase |
+
+![APB controller state machine](docs/images/apb-controller-fsm.svg)
+
+The controller generates `PADDR`, `PSELx[2:0]`, `PENABLE`, `PWRITE`, and `PWDATA`, while controlling `HREADYOUT` to coordinate transfer timing.
+
+## Simulation
+
+The project report documents RTL simulation waveforms for:
+
+- WRAP4 burst write transfer
+- WRAP4 burst read transfer
+
+The waveforms are used to observe the AHB-side transfer sequence and the APB control/data signals, including `PSELx`, `PENABLE`, `PADDR`, `PWDATA`, and `HREADYOUT`.
+
+## Synthesis
+
+The report includes synthesis views for the AHB Slave Interface, APB Controller state machine, and top-level bridge hierarchy.
+
+![Top-level bridge hierarchy](docs/images/bridge-synthesis-hierarchy.svg)
+
+## Repository Structure
+
+- `rtl/` — Verilog RTL modules.
+- `tb/` — simulation testbench.
+- `synthesis/` — Quartus Prime project configuration.
+- `docs/images/` — architecture and design diagrams.
 
 ## Tools
 
 - Verilog HDL
-- Intel Quartus Prime (project files and synthesis reports)
-- ModelSim/QuestaSim-compatible testbench files
+- Intel Quartus Prime
+- ModelSim / QuestaSim-compatible simulation files
 
 ## Running
 
-1. Open the relevant Quartus project under `synthesis/` to inspect its device and compilation settings.
-2. For simulation, compile the RTL modules together with the corresponding testbench in a Verilog simulator.
-3. Inspect APB signals (`pselx`, `penable`, `pwrite`, `paddr`, and `pwdata`) and AHB response/read-data signals.
-
-The testbench and RTL should be checked in your local simulator before relying on results. Some supplied testbenches were empty or had inconsistent port connections in the original archive; only the top-level bridge testbench is included in this repository. The standalone AHB-side testbench from the original archive has a port mismatch and was left out rather than publishing a known-broken testbench.
+1. Open the Quartus project under `synthesis/synth_bridge_top/`.
+2. Compile the RTL modules with the relevant testbench in a Verilog simulator.
+3. Run the simulation and inspect the AHB and APB control and data signals.
