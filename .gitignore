@@ -1,0 +1,27 @@
+# ModelSim / QuestaSim generated files
+sim/work/
+sim/*.wlf
+sim/*.cr.mti
+sim/transcript
+sim/*.vstf
+*.wlf
+*.cr.mti
+
+# Quartus generated databases and output artifacts
+synthesis/*/db/
+synthesis/*/incremental_db/
+synthesis/*/output_files/*.sof
+synthesis/*/output_files/*.pof
+synthesis/*/output_files/*.jdi
+synthesis/*/output_files/*.jditmp
+synthesis/*/output_files/*.done
+
+# Editor and operating-system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Backup and temporary files
+*.bak
+*.tmp
+*~
