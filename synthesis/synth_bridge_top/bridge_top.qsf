@@ -1,0 +1,9 @@
+set_global_assignment -name FAMILY "MAX V"
+set_global_assignment -name DEVICE auto
+set_global_assignment -name TOP_LEVEL_ENTITY bridge_top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
+set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
+set_global_assignment -name VERILOG_FILE ../../rtl/bridge_top.v
+set_global_assignment -name VERILOG_FILE ../../rtl/APB_controller.v
+set_global_assignment -name VERILOG_FILE ../../rtl/AHB_slave_interface.v
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
