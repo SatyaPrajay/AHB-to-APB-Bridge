@@ -43,7 +43,7 @@ Generated simulator work libraries and Quartus databases are intentionally exclu
 2. For simulation, compile the RTL modules together with the corresponding testbench in a Verilog simulator.
 3. Inspect APB signals (`pselx`, `penable`, `pwrite`, `paddr`, and `pwdata`) and AHB response/read-data signals.
 
-The testbench and RTL should be checked in your local simulator before relying on results. Some supplied testbenches were empty or had inconsistent port connections in the original archive; only the usable top-level and corrected AHB-side testbench are included here.
+The testbench and RTL should be checked in your local simulator before relying on results. Some supplied testbenches were empty or had inconsistent port connections in the original archive; only the top-level bridge testbench is included in this repository. The standalone AHB-side testbench from the original archive has a port mismatch and was left out rather than publishing a known-broken testbench.
 
 ## Limitations
 
