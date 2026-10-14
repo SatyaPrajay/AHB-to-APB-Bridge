@@ -44,11 +44,3 @@ Generated simulator work libraries and Quartus databases are intentionally exclu
 3. Inspect APB signals (`pselx`, `penable`, `pwrite`, `paddr`, and `pwdata`) and AHB response/read-data signals.
 
 The testbench and RTL should be checked in your local simulator before relying on results. Some supplied testbenches were empty or had inconsistent port connections in the original archive; only the top-level bridge testbench is included in this repository. The standalone AHB-side testbench from the original archive has a port mismatch and was left out rather than publishing a known-broken testbench.
-
-## Limitations
-
-This is an educational RTL project, not a protocol-certified IP block. The APB read-data model uses `$random`, and the RTL should undergo further simulation, linting, and protocol review before hardware use.
-
-## License
-
-No license is specified. All rights remain with their respective owners unless a license is added.
