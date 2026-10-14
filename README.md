@@ -13,6 +13,14 @@ The design consists of four main blocks:
 
 The top-level integration is implemented in `rtl/bridge_top.v`.
 
+![System architecture showing the AHB Master, AHB Slave Interface, APB Controller, and APB Interface.](doc/system_architecture.png)
+
+*Figure 1. System architecture of the AHB-to-APB bridge.*
+
+![Top-level AHB-to-APB Bridge block diagram, with the AHB Slave Interface and APB Controller inside the bridge.](doc/bridge_block_diagram.png)
+
+*Figure 2. Top-level block diagram of the AHB-to-APB bridge.*
+
 ## AHB Slave Interface
 
 | Signal | Description |
@@ -56,31 +64,56 @@ The APB controller contains eight states:
 
 The controller generates `PADDR`, `PSELx[2:0]`, `PENABLE`, `PWRITE`, and `PWDATA`, while controlling `HREADYOUT` to coordinate AHB and APB timing.
 
-## Simulation
+![APB controller state transition diagram showing the eight controller states and transition conditions.](doc/apb_controller_fsm.png)
 
-The project report includes ModelSim waveform captures for:
+*Figure 3. APB controller finite-state machine and state transitions.*
 
-- WRAP4 burst write transfer
-- WRAP4 burst read transfer
-- AHB Slave Interface internal signals and APB Controller signals during transfer
+## Simulation Results
 
-These waveforms show the timing relationship between the AHB transaction, APB control signals, address/data paths, and controller state transitions.
+The following original ModelSim waveform captures from the project report illustrate the bridge's burst-write and burst-read activity and the corresponding internal signals.
 
-## Synthesis
+![ModelSim waveform for the WRAP4 burst-write transfer, including AHB and APB bus signals.](doc/wrap4_burst_write_waveform.png)
 
-The project report includes synthesis views for:
+*Figure 4. ModelSim waveform for a WRAP4 burst-write transfer.*
 
-- AHB Slave Interface logic
-- APB Controller finite-state machine
-- State transition table
-- Top-level bridge hierarchy
+![Internal AHB Slave Interface and APB Controller signals during simulation.](doc/ahb_slave_apb_controller_waveform.png)
+
+*Figure 5. Internal AHB Slave Interface and APB Controller waveform.*
+
+![ModelSim waveform for the WRAP4 burst-read transfer.](doc/wrap4_burst_read_waveform.png)
+
+*Figure 6. ModelSim waveform for a WRAP4 burst-read transfer.*
+
+![Internal signals during the read-transfer simulation, including address, data, and controller state signals.](doc/read_transfer_internal_waveform.png)
+
+*Figure 7. Internal signal waveform for the read-transfer sequence.*
+
+## Synthesis Results
+
+The project report also contains Quartus synthesis views for the AHB Slave Interface logic, APB controller FSM, its state-transition table, and the top-level design hierarchy.
+
+![Quartus synthesized logic view of the AHB Slave Interface, including address comparisons, selection logic, and pipeline registers.](doc/ahb_slave_synthesis_logic.png)
+
+*Figure 8. Synthesized logic view of the AHB Slave Interface.*
+
+![Synthesis view of the APB controller finite-state machine and its state transitions.](doc/apb_fsm_synthesis_view.png)
+
+*Figure 9. Synthesized APB controller FSM view.*
+
+![State transition table listing source state, destination state, and transition condition.](doc/apb_fsm_transition_table.png)
+
+*Figure 10. APB controller state-transition table.*
+
+![Quartus hierarchy view connecting the AHB Slave Interface and APB Controller under bridge_top.](doc/bridge_synthesis_hierarchy.png)
+
+*Figure 11. Top-level synthesis hierarchy of the bridge.*
 
 ## Repository Structure
 
 - `rtl/` — Verilog RTL modules.
 - `tb/` — simulation testbench.
 - `synthesis/` — Quartus Prime project configuration.
-- `docs/images/` — diagrams, simulation waveforms, and synthesis images from the project report.
+- `doc/` — original project-report images embedded in this README.
 
 ## Tools
 
