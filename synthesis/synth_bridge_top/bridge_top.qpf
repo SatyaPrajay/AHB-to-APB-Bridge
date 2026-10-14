@@ -1,0 +1,4 @@
+# Quartus Prime project file
+QUARTUS_VERSION = "25.1"
+DATE = "19:22:37  June 21, 2026"
+PROJECT_REVISION = "bridge_top"
