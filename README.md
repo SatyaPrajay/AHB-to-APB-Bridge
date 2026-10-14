@@ -101,23 +101,8 @@ The controller generates `PADDR`, `PSELx[2:0]`, `PENABLE`, `PWRITE`, and `PWDATA
 
 ## Simulation Results
 
-The following original ModelSim waveform captures from the project report illustrate the bridge's burst-write and burst-read activity and the corresponding internal signals.
+Detailed waveform screenshots and explanations for the WRAP4 burst-write, WRAP4 burst-read, and internal controller signals are maintained separately in [`results/README.md`](results/README.md).
 
-![ModelSim waveform for the WRAP4 burst-write transfer, including AHB and APB bus signals.](doc/wrap4_burst_write_waveform.png)
-
-*Figure 4. ModelSim waveform for a WRAP4 burst-write transfer.*
-
-![Internal AHB Slave Interface and APB Controller signals during simulation.](doc/ahb_slave_apb_controller_waveform.png)
-
-*Figure 5. Internal AHB Slave Interface and APB Controller waveform.*
-
-![ModelSim waveform for the WRAP4 burst-read transfer.](doc/wrap4_burst_read_waveform.png)
-
-*Figure 6. ModelSim waveform for a WRAP4 burst-read transfer.*
-
-![Internal signals during the read-transfer simulation, including address, data, and controller state signals.](doc/read_transfer_internal_waveform.png)
-
-*Figure 7. Internal signal waveform for the read-transfer sequence.*
 
 ## Synthesis Results
 
