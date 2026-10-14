@@ -57,9 +57,6 @@ The bridge decodes addresses from `0x8000_0000` up to (but not including) `0x8C0
 | `0x8400_0000`–`0x87FF_FFFF` | `3'b010` |
 | `0x8800_0000`–`0x8BFF_FFFF` | `3'b100` |
 
-![Quartus synthesized logic view of the AHB Slave Interface, including address comparisons, selection logic, and pipeline registers.](doc/ahb_slave_synthesis_logic.png)
-
-*Figure 8. Synthesized logic view of the AHB Slave Interface.*
 
 ## APB Controller
 
@@ -110,19 +107,19 @@ The project report also contains Quartus synthesis views for the AHB Slave Inter
 
 ![Quartus synthesized logic view of the AHB Slave Interface, including address comparisons, selection logic, and pipeline registers.](doc/ahb_slave_synthesis_logic.png)
 
-*Figure 8. Synthesized logic view of the AHB Slave Interface.*
+*Figure 4. Synthesized logic view of the AHB Slave Interface.*
 
 ![Synthesis view of the APB controller finite-state machine and its state transitions.](doc/apb_fsm_synthesis_view.png)
 
-*Figure 9. Synthesized APB controller FSM view.*
+*Figure 5. Synthesized APB controller FSM view.*
 
 ![State transition table listing source state, destination state, and transition condition.](doc/apb_fsm_transition_table.png)
 
-*Figure 10. APB controller state-transition table.*
+*Figure 6. APB controller state-transition table.*
 
 ![Quartus hierarchy view connecting the AHB Slave Interface and APB Controller under bridge_top.](doc/bridge_synthesis_hierarchy.png)
 
-*Figure 11. Top-level synthesis hierarchy of the bridge.*
+*Figure 7. Top-level synthesis hierarchy of the bridge.*
 
 ## Repository Structure
 
